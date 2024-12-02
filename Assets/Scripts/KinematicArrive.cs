@@ -29,10 +29,10 @@ public class KinematicArrive : MonoBehaviour
 
     void Update()
     {
-        // left-click to move formation
+        // Left-click to move formation
         if (Input.GetMouseButtonDown(0) && !isMoving)
         {
-            // get mouse position and convert it to a world point on the plane
+            // Get mouse position and convert it to a world point on the plane
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
@@ -41,7 +41,7 @@ public class KinematicArrive : MonoBehaviour
             }
         }
 
-        // right-click to place obstacles
+        // Right-click to place obstacles
         if (Input.GetMouseButtonDown(1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

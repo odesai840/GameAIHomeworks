@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-//using static AStarPathfinding;
 
 public class AStarPathfinding : MonoBehaviour
 {
@@ -33,27 +32,27 @@ public class AStarPathfinding : MonoBehaviour
 
     void Update()
     {
-        // left-click to set target position
+        // Left-click to set target position
         if (Input.GetMouseButtonDown(0) && !isMoving)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 targetPosition = hit.point;
-                CalculatePath(transform.position, targetPosition); // calculate A* path
+                CalculatePath(transform.position, targetPosition); // Calculate A* path
                 isMoving = true;
                 currentWaypointIndex = 0;
             }
         }
 
-        // right-click to place obstacles
+        // Right-click to place obstacles
         if (Input.GetMouseButtonDown(1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Instantiate(obstaclePrefab, hit.point, Quaternion.identity);
-                MarkNodesAsUnwalkable(hit.point); // mark nearby nodes as non-walkable
+                MarkNodesAsUnwalkable(hit.point); // Mark nearby nodes as non-walkable
             }
         }
     }
@@ -96,7 +95,7 @@ public class AStarPathfinding : MonoBehaviour
             }
         }
 
-        // Optionally, you can draw the start and end positions for clarity
+        // Draw the start and end positions for clarity
         if (path.Count > 0)
         {
             Gizmos.color = Color.yellow;
@@ -138,7 +137,7 @@ public class AStarPathfinding : MonoBehaviour
         float distance = direction.magnitude;
 
         Vector3 velocity = Vector3.zero;
-        // if the character is close enough to the current waypoint, move to the next
+        // If the character is close enough to the current waypoint, move to the next
         if (direction.sqrMagnitude > radiusOfSat * radiusOfSat)
         {
             direction.Normalize();
@@ -147,12 +146,12 @@ public class AStarPathfinding : MonoBehaviour
         }
         else
         {
-            currentWaypointIndex++; // move to the next waypoint
+            currentWaypointIndex++; // Move to the next waypoint
         }
 
         rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
 
-        // smoothly rotate towards the waypoint
+        // Smoothly rotate towards the waypoint
         if (velocity != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(velocity);
@@ -244,7 +243,7 @@ public class AStarPathfinding : MonoBehaviour
         }
         waypoints.Reverse();
 
-        // update the path for the character
+        // Update the path for the character
         path = waypoints;
         Debug.Log($"Path calculated: {path.Count} waypoints");
     }
@@ -263,11 +262,11 @@ public class AStarPathfinding : MonoBehaviour
         public bool isWalkable;
         public int gridX, gridY;
 
-        public int gCost; // cost from start node
-        public int hCost; // heuristic cost to target node
+        public int gCost; // Cost from start node
+        public int hCost; // Heuristic cost to target node
         public int fCost => gCost + hCost;
 
-        public Node parent; // for path reconstruction
+        public Node parent; // For path reconstruction
 
         public Node(Vector3 worldPosition, bool isWalkable, int gridX, int gridY)
         {
@@ -289,7 +288,7 @@ public class AStarPathfinding : MonoBehaviour
         {
             this.nodeSize = nodeSize;
 
-            // calculate grid dimensions based on the plane's size
+            // Calculate grid dimensions based on the plane's size
             Vector3 planeScale = plane.transform.localScale;
             float planeWidth = planeScale.x * 10f;
             float planeHeight = planeScale.z * 10f;
@@ -297,17 +296,17 @@ public class AStarPathfinding : MonoBehaviour
             gridSizeX = Mathf.RoundToInt(planeWidth / nodeSize);
             gridSizeY = Mathf.RoundToInt(planeHeight / nodeSize);
 
-            // get the origin position (bottom-left corner of the plane)
+            // Get the origin position (bottom-left corner of the plane)
             originPosition = plane.transform.position - new Vector3((planeWidth - 0.75f) / 2, 0, (planeHeight - 0.75f) / 2);
 
-            // create nodes
+            // Create nodes
             nodes = new Node[gridSizeX, gridSizeY];
             for (int x = 0; x < gridSizeX; x++)
             {
                 for (int y = 0; y < gridSizeY; y++)
                 {
                     Vector3 worldPosition = originPosition + new Vector3(x * nodeSize, 0, y * nodeSize);
-                    nodes[x, y] = new Node(worldPosition, true, x, y); // mark nodes as walkable initially
+                    nodes[x, y] = new Node(worldPosition, true, x, y); // Mark nodes as walkable initially
                 }
             }
         }
@@ -327,7 +326,7 @@ public class AStarPathfinding : MonoBehaviour
             {
                 for (int dy = -1; dy <= 1; dy++)
                 {
-                    if (dx == 0 && dy == 0) continue; // skip the current node
+                    if (dx == 0 && dy == 0) continue; // Skip the current node
 
                     int x = node.gridX + dx;
                     int y = node.gridY + dy;
